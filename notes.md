@@ -91,16 +91,16 @@ In the case of Heroku asking for your GitHub information for access:
 - Heroku would be your [Identity Server]
 - GitHub would be your [Resource Server]
 
-Therefore, when Heroku asks for access to your github, you are given a confirmation screen that asks if it's okay for heroku to access your public information and your respositories. 
-
 ### Step 1: Heroku (requesting) --> GitHub (confirm?)
 
-When approved for access, Heroku receives an 0auth token, which GitHub identifies as a trusted source. 
+When Heroku asks for access to your github, you are given a confirmation screen that asks if it's okay for heroku to access your public information and your respositories. 
 
 ### Step 2: GitHub (gives token) --> Heroku (receives token)
 
-That token, as long as it's valid, provides a key for Heroku to open the door to your information and repositories. 
+When approved for access, Heroku receives an 0auth token, which GitHub identifies as a trusted source. 
 
 ### Step 3: Heroku (with token, requests access) --> GitHub (checks 0auth, gives access if valid)
+
+That token, as long as it's valid, provides a key for Heroku to open the door to your information and repositories. 
 
 
