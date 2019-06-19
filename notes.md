@@ -70,14 +70,20 @@ And in our database models, we would have only:
 
 ## Authentication vs. Authorization
 
-Authentication (AuthN): "Who are you?"
+### Authentication (AuthN): "Who are you?"
+- Authentication is about validating your credentials such as Username/User ID and password to verify your identity. 
+- The system then checks whether you are what you say you are using your credentials. 
+- Whether in public or private networks, the system authenticates the user identity through login passwords.
+- Usually authentication is done by a username and password, although there are other various ways to be authenticated.
 
-Authorization (AuthZ): "What can you do?"
+### Authorization (AuthZ): "What can you do?"
+- Authorization verifies your rights to grant you access to resources only after determining your ability to access the system and up to what extent.
 - Usually created by you
 - Often role-based, like admin, user, moderator
 - Permissions based on each role
 
-0auth2 (AuthZ) + OpenID Connect (OIDC).
+
+### 0auth2 (AuthZ) + OpenID Connect (OIDC).
 - Usually used together to provide authZ and authN.
 
 In the case of Heroku asking for your GitHub information for access:
