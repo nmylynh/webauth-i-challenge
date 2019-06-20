@@ -105,15 +105,17 @@ That token, as long as it's valid, provides a key for Heroku to open the door to
 
 ## Bae-sic Auth
 
-1.) First, install bcryptjs:
+### 1.) First, install bcryptjs:
 
     npm i bcryptjs
 
-2.) Second, add to global middleware (server.js):
+### 2.) Second, add to global middleware (server.js):
 
     const bcrypt = require('bcryptjs');
     
-3.) [Registration] Hash the password by inserting bcrypt in post operation, where the 14 means re-hashed 2 ^ 14 times:
+### 3.) [Registration]
+
+Hash the password by inserting bcrypt in post operation, where the 14 means re-hashed 2 ^ 14 times:
 
 In auth-helper.js would be:
 
@@ -142,7 +144,9 @@ And inside auth-router.js:
         }
     });
 
-4.) [Login] As you post your password, it's validated with the same hash parameters in registration. Therefore, the database recieves the credentials and re-hashes it 2 ^ 14 times, and then authenticating the result.
+### 4.) [Login] 
+
+As you post your password, it's validated with the same hash parameters in registration. Therefore, the database recieves the credentials and re-hashes it 2 ^ 14 times, and then authenticating the result.
 
 Add your login function in auth-helper.js, where it selects the first result that matches the credential's username in the database:
 
@@ -176,7 +180,9 @@ Then inside auth-router.js:
         }
     })
 
-5.) [Restrictions] To have a secure server, you must restrict access if they are not logged in. Use a middleware for this:
+### 5.) [Restrictions] 
+
+To have a secure server, you must restrict access if they are not logged in. Use a middleware for this:
 
     const restricted = async (req, res, next) => {
         const { username, password } = req.headers;
