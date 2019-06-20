@@ -103,4 +103,103 @@ When approved for access, Heroku receives an 0auth token, which GitHub identifie
 
 That token, as long as it's valid, provides a key for Heroku to open the door to your information and repositories. 
 
+## Bae-sic Auth
+
+1.) First, install bcryptjs:
+
+    npm i bcryptjs
+
+2.) Second, add to global middleware (server.js):
+
+    const bcrypt = require('bcryptjs');
+    
+3.) [Registration] Hash the password by inserting bcrypt in post operation, where the 14 means re-hashed 2 ^ 14 times:
+
+In auth-helper.js would be:
+
+    const db = require('../database/dbConfig.js');
+
+    module.exports = {
+        register: (newUser) => {
+            return db('users').insert(newUser)
+        }
+    }
+
+And inside auth-router.js:
+
+    router.post('/register', async (req, res) => {
+        try {
+            let newUser = req.body;
+
+            const hash = bcrypt.hashSync(newUser.password, 14);
+
+            newUser.password = hash;
+
+            const savedUser = await userDB.register(newUser); 
+            res.status(201).json(savedUser);
+        } catch(err) {
+            res.status(500).json({success: false, err});
+        }
+    });
+
+4.) [Login] As you post your password, it's validated with the same hash parameters in registration. Therefore, the database recieves the credentials and re-hashes it 2 ^ 14 times, and then authenticating the result.
+
+Add your login function in auth-helper.js, where it selects the first result that matches the credential's username in the database:
+
+    const db = require('../database/dbConfig.js');
+
+    module.exports = {
+        register: (newUser) => {
+            return db('users')
+                .insert(newUser)
+        },
+        login: (username) => {
+            return db('users')
+                .where({ username })
+                .first()
+        }  
+    }
+
+Then inside auth-router.js:
+
+    router.post('/login', async (req, res) => {
+        try {
+            const { username, password } = req.body;
+
+            const user = await userDB.login(username);
+
+            user && bcrypt.compareSync(password, user.password)
+            ? res.status(200).json({message: `Welcome ${user.username}!`})
+            : res.status(401).json({message: 'Invalid credentials.'});
+        } catch(err) {
+            res.status(500).json({ success: false, err })
+        }
+    })
+
+5.) [Restrictions] To have a secure server, you must restrict access if they are not logged in. Use a middleware for this:
+
+    const restricted = async (req, res, next) => {
+        const { username, password } = req.headers;
+        if (username && password) {
+            try {
+                const user = await usersDB.login(username);
+
+                user && bcrypt.compareSync(password, user.password)
+                ? next()
+                : res.status(401).json({ message: 'Invalid credentials.' });
+                
+            } catch(err) {
+                res.status(500).json({ success: false, err });
+            }
+        } else {
+            res.status(400).json({ message: 'Please provide credentials.' });
+        }
+    }
+
+You will also use sessions, but we'll deal with that on day 2.
+
+-----------------------------------------------------------------------------------
+
+# Day 2: Sessions and Cookies
+
 
