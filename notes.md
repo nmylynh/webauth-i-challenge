@@ -185,7 +185,9 @@ Then inside auth-router.js:
 To have a secure server, you must restrict access if they are not logged in. Use a middleware for this:
 
     const restricted = async (req, res, next) => {
+
         const { username, password } = req.headers;
+
         if (username && password) {
             try {
                 const user = await usersDB.login(username);
@@ -208,4 +210,45 @@ You will also use sessions, but we'll deal with that on day 2.
 
 # Day 2: Sessions and Cookies
 
+### Step 1: Install express-session
+
+    npm i express-session
+
+### Step 2: Add to middleware.js:
+
+    const express = require('express');
+    const helmet = require('helmet');
+    const morgan = require('morgan');
+    const cors = require('cors');
+    const bcrypt = require('bcryptjs');
+    const session = require('express-session');
+
+    const sessionConfig = {
+        name: 'PATRICK',
+        secret: 'who is victoria and what's her secret',
+        resave: false, 
+        saveUninitialized: true,
+        cookie: {
+            maxAge: 1000 * 60 * 10,
+            secure: false,
+            httpOnly: true,
+        },
+    };
+
+    module.exports = server => {
+        server.use(express.json()); 
+        server.use(cors()); 
+        server.use(helmet()); 
+        server.use(morgan('tiny'));
+        server.use(session(sessionConfig)); 
+    }
+
+- For security reasons, name it randomly (default sid) and have a secret. 
+- resave: if there are no changes to the session, don't save it
+- saveUninitialized: true for dev, false for production. 
+    * It's For GDPR compliance: if there is no session, it's going to create it automatically for you and send you back a cookie 
+- cookie: 
+    * [maxAge] is in milliseconds. 1000 * 60 * 10 would be 10 minutes.
+    * [secure] sends cookies only over https, set to true in production 
+    * [httpOnly] always set to true, it means client JS can't access the cookie
 
