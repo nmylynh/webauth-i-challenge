@@ -26,7 +26,7 @@ router.get('/:id', restricted, mw.validateUserId, async (req, res) => {
     }
 });
 
-router.put('/:id', restricted, mw.validateUserId, mw.validateUserId, async (req, res) => {
+router.put('/:id', restricted, mw.validateUserId, mw.validateUserBody, async (req, res) => {
     try {
         const { id } = req.params;
         let newUser = req.body;
