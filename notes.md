@@ -300,7 +300,7 @@ Add it to global middleware & session configuration, middleware.js will now be:
 
     const sessionConfig = {
         name: 'THISISPATRICK',
-        secret: 'who is Victoria and what's her secret',
+        secret: 'who is Victoria and what is her secret',
         resave: false, 
         saveUninitialized: true,
         cookie: {
