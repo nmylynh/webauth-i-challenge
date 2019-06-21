@@ -38,7 +38,7 @@ router.put('/:id', restricted, mw.validateUserId, mw.validateUserBody, async (re
 
         updateUser 
         ? res.status(200).json({message: 'successfully updated credentials'}) 
-        : res.status(404).end();
+        : res.status(404).json({message: 'missing required fields'})
     } catch(err) {
         res.status(500).json({success:false, err})
     }
