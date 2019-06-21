@@ -148,7 +148,7 @@ And inside auth-router.js:
 
 As you post your password, it's validated with the same hash parameters in registration. Therefore, the database recieves the credentials and re-hashes it 2 ^ 14 times, and then authenticating the result.
 
-Add your login function in auth-helper.js, where it selects the first result that matches the credential's username in the database:
+Add your login function in auth-model.js, where it selects the first result that matches the credential's username in the database:
 
     const db = require('../database/dbConfig.js');
 
