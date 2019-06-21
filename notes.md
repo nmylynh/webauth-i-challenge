@@ -212,7 +212,7 @@ To have a secure server, you must restrict access if they are not logged in. Use
 
     npm i express-session
 
-### Step 2: Add to middleware.js:
+### Step 2: Add to session to middleware.js:
 
     const session = require('express-session');
 
@@ -220,7 +220,7 @@ Add session config:
 
     const sessionConfig = {
         name: 'THISISPATRICK',
-        secret: 'who is Victoria and what's her secret',
+        secret: 'who is Victoria and what is her secret',
         resave: false, 
         saveUninitialized: true,
         cookie: {
@@ -228,7 +228,6 @@ Add session config:
             secure: false,
             httpOnly: true,
         },
-        store: new KnexSession
     };
 
 - For security reasons, name it randomly (default sid) and have a secret. 
@@ -249,10 +248,6 @@ Export module:
 ### Step 3: Re-write your auth middleware and export it:
 
 Create /middleware/auth-mw.js:
-
-    const bcrypt = require('bcryptjs');
-
-    const Users = require('../models/users-model.js');
 
     module.exports = (req, res, next) => {
         req.session && req.session.username
