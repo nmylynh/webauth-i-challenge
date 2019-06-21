@@ -1,7 +1,9 @@
+const userDB = require('../models/users-model');
+
 module.exports = {
     validateUserId: async (req, res, next) => {
         try {
-            const {id} = req.params;
+            const { id } = req.params;
             const user = await userDB.findById(id);
     
             user 

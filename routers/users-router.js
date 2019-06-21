@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const userDB = require('../models/users-model')
+const bcrypt = require('bcryptjs');
+const userDB = require('../models/users-model');
 const restricted = require('../middleware/auth-mw.js');
 const mw = require('../middleware/users-mw');
 
@@ -28,6 +29,11 @@ router.get('/:id', restricted, mw.validateUserId, async (req, res) => {
 router.put('/:id', restricted, mw.validateUserId, mw.validateUserId, async (req, res) => {
     try {
         const { id } = req.params;
+        let newUser = req.body;
+
+        const hash = bcrypt.hashSync(newUser.password, 14);
+        newUser.password = hash;
+
         const updateUser = await userDB.update(id, req.body);
 
         updateUser 
