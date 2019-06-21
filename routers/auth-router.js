@@ -2,13 +2,13 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const userDB = require('../models/auth-model')
+const mw = require('../middleware/users-mw');
 
-router.post('/register', async (req, res) => {
+router.post('/register', mw.validateUserBody, async (req, res) => {
     try {
         let newUser = req.body;
 
         const hash = bcrypt.hashSync(newUser.password, 14);
-
         newUser.password = hash;
 
         const savedUser = await userDB.register(newUser); 
@@ -18,7 +18,7 @@ router.post('/register', async (req, res) => {
     }
 });
 
-router.post('/login', async (req, res) => {
+router.post('/login', mw.validateUserBody, async (req, res) => {
     try {
         const { username, password } = req.body;
 
@@ -37,6 +37,7 @@ router.delete('/', (req, res) => {
     if (req.session) {
         req.session.destroy();
     }
+
     res.status(200).json({ message: 'You have now been logged out.' });
 });
 
